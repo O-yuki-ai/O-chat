@@ -3,11 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Oチャット</title>
+  <title>愛のOチャット</title>
+
+  <!-- フォント -->
+  <link href="https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap" rel="stylesheet">
+
   <style>
     body {
-      font-family: "Noto Sans JP", sans-serif;
-      background: #f3eefc;
+      font-family: "Sawarabi Mincho", "Noto Sans JP", serif;
+      background: #fff0f5; /* 桜色 */
       color: #333;
       display: flex;
       flex-direction: column;
@@ -16,43 +20,79 @@
       height: 100vh;
       margin: 0;
     }
+
     .chat-box {
       width: 90%;
       max-width: 500px;
       background: white;
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      text-align: center;
     }
+
+    h2 {
+      color: #d95c9f;
+      text-shadow: 0 0 8px rgba(217,92,159,0.4);
+      margin-bottom: 20px;
+      font-size: 22px;
+    }
+
     textarea {
       width: 100%;
       height: 60px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid #e6a7c3;
+      padding: 10px;
       resize: none;
       font-size: 16px;
+      outline: none;
+      transition: all 0.2s ease;
+      font-family: "Sawarabi Mincho", serif;
     }
+
+    textarea:focus {
+      border-color: #d95c9f;
+      box-shadow: 0 0 6px rgba(217,92,159,0.4);
+    }
+
     button {
-      margin-top: 8px;
+      margin-top: 10px;
       width: 100%;
-      padding: 10px;
-      background: #7a5cf3;
+      padding: 12px;
+      background: linear-gradient(135deg, #e46bb0, #f7b1d3);
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 16px;
+      border-radius: 12px;
+      font-size: 17px;
+      box-shadow: 0 3px 8px rgba(228,107,176,0.3);
+      transition: all 0.3s ease;
+      cursor: pointer;
     }
+
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 15px rgba(228,107,176,0.6);
+      filter: brightness(1.1);
+    }
+
     .reply {
-      margin-top: 16px;
+      margin-top: 20px;
+      background: #fff;
+      border: 1px solid #eac4f1;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       white-space: pre-wrap;
+      text-align: left;
     }
+
   </style>
 </head>
 <body>
   <div class="chat-box">
-    <h2>💬 Oちゃんとおしゃべり</h2>
-    <textarea id="message" placeholder="Oちゃんに話しかけてみて..."></textarea>
+    <h2>💗 愛のOチャット 💗</h2>
+    <textarea id="message" placeholder="Oちゃんに話しかけてみて…"></textarea>
     <button onclick="sendMessage()">送信</button>
     <div id="reply" class="reply"></div>
   </div>
