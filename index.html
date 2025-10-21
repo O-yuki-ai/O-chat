@@ -1,18 +1,13 @@
-<!DOCTYPE html>
+      <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>愛のOチャット</title>
-
-  <!-- フォント -->
-  <link href="https://fonts.googleapis.com/css2?family=Sawarabi+Mincho&display=swap" rel="stylesheet">
-
+  <title>💗 愛のOチャット 💗</title>
   <style>
     body {
-      font-family: "Sawarabi Mincho", "Noto Sans JP", serif;
-      background: #fff0f5; /* 桜色 */
-      color: #333;
+      font-family: "Noto Sans JP", sans-serif;
+      background: linear-gradient(180deg, #ffe6ef 0%, #fff0f5 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -20,101 +15,121 @@
       height: 100vh;
       margin: 0;
     }
-
-    .chat-box {
-      width: 90%;
-      max-width: 500px;
-      background: white;
-      border-radius: 20px;
-      padding: 24px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    h1 {
+      color: #d63384;
+      font-size: 1.5rem;
       text-align: center;
+      margin-bottom: 15px;
+      text-shadow: 0 0 8px #ffd6e8;
     }
-
-    h2 {
-      color: #d95c9f;
-      text-shadow: 0 0 8px rgba(217,92,159,0.4);
-      margin-bottom: 20px;
-      font-size: 22px;
+    #chat-box {
+      width: 90%;
+      max-width: 400px;
+      height: 60vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 16px;
+      padding: 10px 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-bottom: 15px;
     }
-
+    .msg {
+      margin: 10px 0;
+      padding: 8px 12px;
+      border-radius: 12px;
+      line-height: 1.6;
+      max-width: 80%;
+    }
+    .user {
+      background: #ffd6e8;
+      align-self: flex-end;
+      text-align: right;
+      margin-left: auto;
+    }
+    .bot {
+      background: #f8f9fa;
+      align-self: flex-start;
+    }
+    #form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 90%;
+      max-width: 400px;
+    }
     textarea {
       width: 100%;
       height: 60px;
-      border-radius: 10px;
-      border: 1px solid #e6a7c3;
+      border: 1px solid #f3a6c1;
+      border-radius: 12px;
       padding: 10px;
+      font-size: 1rem;
       resize: none;
-      font-size: 16px;
+      margin-bottom: 10px;
       outline: none;
-      transition: all 0.2s ease;
-      font-family: "Sawarabi Mincho", serif;
     }
-
-    textarea:focus {
-      border-color: #d95c9f;
-      box-shadow: 0 0 6px rgba(217,92,159,0.4);
-    }
-
     button {
-      margin-top: 10px;
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, #e46bb0, #f7b1d3);
+      background: linear-gradient(90deg, #ff8dc7, #f06292);
       color: white;
       border: none;
       border-radius: 12px;
-      font-size: 17px;
-      box-shadow: 0 3px 8px rgba(228,107,176,0.3);
-      transition: all 0.3s ease;
+      padding: 10px 20px;
+      font-size: 1rem;
       cursor: pointer;
+      box-shadow: 0 4px 8px rgba(255, 105, 180, 0.3);
+      transition: 0.2s;
     }
-
     button:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 15px rgba(228,107,176,0.6);
-      filter: brightness(1.1);
     }
-
-    .reply {
-      margin-top: 20px;
-      background: #fff;
-      border: 1px solid #eac4f1;
-      border-radius: 12px;
-      padding: 12px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      white-space: pre-wrap;
-      text-align: left;
-    }
-
   </style>
 </head>
 <body>
-  <div class="chat-box">
-    <h2>💗 愛のOチャット 💗</h2>
+  <h1>💗 愛のOチャット 💗</h1>
+
+  <div id="chat-box"></div>
+
+  <form id="form">
     <textarea id="message" placeholder="Oちゃんに話しかけてみて…"></textarea>
-    <button onclick="sendMessage()">送信</button>
-    <div id="reply" class="reply"></div>
-  </div>
+    <button type="submit">送信</button>
+  </form>
 
   <script>
-    async function sendMessage() {
-      const message = document.getElementById("message").value;
-      const replyDiv = document.getElementById("reply");
-      replyDiv.textContent = "考え中…";
+    const chatBox = document.getElementById("chat-box");
+    const form = document.getElementById("form");
+    const messageInput = document.getElementById("message");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const userMessage = messageInput.value.trim();
+      if (!userMessage) return;
+
+      appendMessage(userMessage, "user");
+      messageInput.value = "";
+
+      appendMessage("考え中…", "bot");
 
       try {
-        const response = await fetch("/api/chat", {
+        const res = await fetch("/api/chat", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message })
+          body: JSON.stringify({ message: userMessage }),
         });
 
-        const data = await response.json();
-        replyDiv.textContent = data.reply || "Oちゃんが沈黙してる…";
-      } catch (err) {
-        replyDiv.textContent = "通信エラーが発生したみたい💦";
+        const data = await res.json();
+        const lastBotMsg = chatBox.querySelector(".bot:last-child");
+        lastBotMsg.textContent = data.reply;
+      } catch {
+        appendMessage("通信エラーが発生したみたい💦", "bot");
       }
+    });
+
+    function appendMessage(text, sender) {
+      const msg = document.createElement("div");
+      msg.classList.add("msg", sender);
+      msg.textContent = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
     }
   </script>
 </body>
